@@ -1,0 +1,637 @@
+{
+  "generated_at": "2026-01-30T18:53:40.592283",
+  "project_id": "sonorous-key-320714",
+  "model_metrics": {
+    "MAE": 3.1743994413972585,
+    "RMSE": 5.741622441090234,
+    "R2": 0.9233175123565769
+  },
+  "feature_importance": [
+    {
+      "feature": "straight_line_km",
+      "importance": 1371769.2798
+    },
+    {
+      "feature": "trip_miles",
+      "importance": 977744.0706
+    },
+    {
+      "feature": "trip_seconds",
+      "importance": 222978.066
+    },
+    {
+      "feature": "is_airport_pickup",
+      "importance": 134920.3754
+    },
+    {
+      "feature": "same_area_trip",
+      "importance": 69446.4357
+    },
+    {
+      "feature": "is_downtown_pickup",
+      "importance": 41265.6583
+    },
+    {
+      "feature": "is_airport_dropoff",
+      "importance": 40375.9769
+    },
+    {
+      "feature": "is_downtown_dropoff",
+      "importance": 38033.5878
+    },
+    {
+      "feature": "hour_cos",
+      "importance": 6454.2958
+    },
+    {
+      "feature": "is_late_night",
+      "importance": 5600.4266
+    }
+  ],
+  "prediction_quality": [
+    {
+      "quality": "Excellent",
+      "count": 681439,
+      "pct": 47.8
+    },
+    {
+      "quality": "Good",
+      "count": 498798,
+      "pct": 35.0
+    },
+    {
+      "quality": "Fair",
+      "count": 154952,
+      "pct": 10.9
+    },
+    {
+      "quality": "Poor",
+      "count": 89858,
+      "pct": 6.3
+    }
+  ],
+  "performance_history": [
+    {
+      "date": "2023-09-01",
+      "daily_mae": 3.472,
+      "within_5_pct": 83.6,
+      "num_predictions": 15391
+    },
+    {
+      "date": "2023-09-02",
+      "daily_mae": 3.466,
+      "within_5_pct": 83.8,
+      "num_predictions": 11267
+    },
+    {
+      "date": "2023-09-03",
+      "daily_mae": 3.651,
+      "within_5_pct": 82.0,
+      "num_predictions": 10242
+    },
+    {
+      "date": "2023-09-04",
+      "daily_mae": 3.833,
+      "within_5_pct": 79.4,
+      "num_predictions": 10732
+    },
+    {
+      "date": "2023-09-05",
+      "daily_mae": 3.506,
+      "within_5_pct": 83.2,
+      "num_predictions": 16116
+    },
+    {
+      "date": "2023-09-06",
+      "daily_mae": 3.358,
+      "within_5_pct": 84.5,
+      "num_predictions": 17069
+    },
+    {
+      "date": "2023-09-07",
+      "daily_mae": 3.356,
+      "within_5_pct": 84.2,
+      "num_predictions": 18182
+    },
+    {
+      "date": "2023-09-08",
+      "daily_mae": 3.534,
+      "within_5_pct": 83.2,
+      "num_predictions": 17930
+    },
+    {
+      "date": "2023-09-09",
+      "daily_mae": 3.636,
+      "within_5_pct": 81.7,
+      "num_predictions": 13447
+    },
+    {
+      "date": "2023-09-10",
+      "daily_mae": 4.147,
+      "within_5_pct": 77.9,
+      "num_predictions": 14347
+    },
+    {
+      "date": "2023-09-11",
+      "daily_mae": 3.729,
+      "within_5_pct": 81.6,
+      "num_predictions": 19149
+    },
+    {
+      "date": "2023-09-12",
+      "daily_mae": 3.446,
+      "within_5_pct": 83.6,
+      "num_predictions": 19113
+    },
+    {
+      "date": "2023-09-13",
+      "daily_mae": 3.597,
+      "within_5_pct": 83.2,
+      "num_predictions": 19665
+    },
+    {
+      "date": "2023-09-14",
+      "daily_mae": 3.739,
+      "within_5_pct": 81.9,
+      "num_predictions": 19404
+    },
+    {
+      "date": "2023-09-15",
+      "daily_mae": 4.035,
+      "within_5_pct": 80.2,
+      "num_predictions": 17393
+    },
+    {
+      "date": "2023-09-16",
+      "daily_mae": 4.26,
+      "within_5_pct": 79.5,
+      "num_predictions": 10689
+    },
+    {
+      "date": "2023-09-17",
+      "daily_mae": 4.39,
+      "within_5_pct": 76.8,
+      "num_predictions": 11491
+    },
+    {
+      "date": "2023-09-18",
+      "daily_mae": 3.755,
+      "within_5_pct": 81.6,
+      "num_predictions": 16903
+    },
+    {
+      "date": "2023-09-19",
+      "daily_mae": 3.497,
+      "within_5_pct": 83.6,
+      "num_predictions": 19077
+    },
+    {
+      "date": "2023-09-20",
+      "daily_mae": 3.567,
+      "within_5_pct": 82.9,
+      "num_predictions": 19031
+    },
+    {
+      "date": "2023-09-21",
+      "daily_mae": 3.822,
+      "within_5_pct": 81.3,
+      "num_predictions": 20139
+    },
+    {
+      "date": "2023-09-22",
+      "daily_mae": 3.652,
+      "within_5_pct": 82.7,
+      "num_predictions": 18640
+    },
+    {
+      "date": "2023-09-23",
+      "daily_mae": 3.678,
+      "within_5_pct": 82.6,
+      "num_predictions": 12764
+    },
+    {
+      "date": "2023-09-24",
+      "daily_mae": 4.199,
+      "within_5_pct": 78.2,
+      "num_predictions": 12146
+    },
+    {
+      "date": "2023-09-25",
+      "daily_mae": 3.708,
+      "within_5_pct": 82.0,
+      "num_predictions": 15706
+    },
+    {
+      "date": "2023-09-26",
+      "daily_mae": 3.371,
+      "within_5_pct": 84.2,
+      "num_predictions": 18340
+    },
+    {
+      "date": "2023-09-27",
+      "daily_mae": 3.368,
+      "within_5_pct": 84.1,
+      "num_predictions": 18261
+    },
+    {
+      "date": "2023-09-28",
+      "daily_mae": 3.745,
+      "within_5_pct": 81.7,
+      "num_predictions": 19036
+    },
+    {
+      "date": "2023-09-29",
+      "daily_mae": 3.676,
+      "within_5_pct": 81.5,
+      "num_predictions": 17845
+    },
+    {
+      "date": "2023-09-30",
+      "daily_mae": 3.521,
+      "within_5_pct": 82.5,
+      "num_predictions": 12143
+    }
+  ],
+  "drift_history": [
+    {
+      "date": "2023-09-30",
+      "miles_zscore": 0.114,
+      "fare_zscore": 0.102,
+      "duration_zscore": 0.105,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-29",
+      "miles_zscore": 0.133,
+      "fare_zscore": 0.152,
+      "duration_zscore": 0.191,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-28",
+      "miles_zscore": 0.12,
+      "fare_zscore": 0.158,
+      "duration_zscore": 0.254,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-27",
+      "miles_zscore": 0.057,
+      "fare_zscore": 0.081,
+      "duration_zscore": 0.081,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-26",
+      "miles_zscore": 0.086,
+      "fare_zscore": 0.11,
+      "duration_zscore": 0.086,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-25",
+      "miles_zscore": 0.242,
+      "fare_zscore": 0.259,
+      "duration_zscore": 0.099,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-24",
+      "miles_zscore": 0.349,
+      "fare_zscore": 0.373,
+      "duration_zscore": 0.135,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-23",
+      "miles_zscore": 0.028,
+      "fare_zscore": 0.036,
+      "duration_zscore": 0.029,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-22",
+      "miles_zscore": 0.101,
+      "fare_zscore": 0.131,
+      "duration_zscore": 0.157,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-21",
+      "miles_zscore": 0.133,
+      "fare_zscore": 0.184,
+      "duration_zscore": 0.302,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-20",
+      "miles_zscore": 0.102,
+      "fare_zscore": 0.138,
+      "duration_zscore": 0.179,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-19",
+      "miles_zscore": 0.03,
+      "fare_zscore": 0.074,
+      "duration_zscore": 0.142,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-18",
+      "miles_zscore": 0.279,
+      "fare_zscore": 0.312,
+      "duration_zscore": 0.178,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-17",
+      "miles_zscore": 0.412,
+      "fare_zscore": 0.444,
+      "duration_zscore": 0.16,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-16",
+      "miles_zscore": 0.109,
+      "fare_zscore": 0.132,
+      "duration_zscore": 0.177,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-15",
+      "miles_zscore": 0.145,
+      "fare_zscore": 0.194,
+      "duration_zscore": 0.311,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-14",
+      "miles_zscore": 0.152,
+      "fare_zscore": 0.191,
+      "duration_zscore": 0.262,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-13",
+      "miles_zscore": 0.067,
+      "fare_zscore": 0.107,
+      "duration_zscore": 0.136,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-12",
+      "miles_zscore": 0.045,
+      "fare_zscore": 0.08,
+      "duration_zscore": 0.079,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-11",
+      "miles_zscore": 0.148,
+      "fare_zscore": 0.189,
+      "duration_zscore": 0.225,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-10",
+      "miles_zscore": 0.355,
+      "fare_zscore": 0.395,
+      "duration_zscore": 0.188,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-09",
+      "miles_zscore": 0.083,
+      "fare_zscore": 0.093,
+      "duration_zscore": 0.06,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-08",
+      "miles_zscore": 0.038,
+      "fare_zscore": 0.054,
+      "duration_zscore": 0.082,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-07",
+      "miles_zscore": 0.006,
+      "fare_zscore": 0.022,
+      "duration_zscore": 0.089,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-06",
+      "miles_zscore": 0.03,
+      "fare_zscore": 0.045,
+      "duration_zscore": 0.052,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-05",
+      "miles_zscore": 0.111,
+      "fare_zscore": 0.117,
+      "duration_zscore": 0.096,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-04",
+      "miles_zscore": 0.347,
+      "fare_zscore": 0.328,
+      "duration_zscore": 0.076,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-03",
+      "miles_zscore": 0.025,
+      "fare_zscore": 0.025,
+      "duration_zscore": 0.067,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-02",
+      "miles_zscore": 0.053,
+      "fare_zscore": 0.064,
+      "duration_zscore": 0.081,
+      "drift_status": "OK"
+    },
+    {
+      "date": "2023-09-01",
+      "miles_zscore": 0.022,
+      "fare_zscore": 0.024,
+      "duration_zscore": 0.16,
+      "drift_status": "OK"
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": 1,
+      "cluster_size": 204,
+      "avg_fare": 30.88,
+      "avg_miles": 7.42,
+      "airport_pct": 16.7,
+      "downtown_pct": 35.8,
+      "night_pct": 32.3
+    },
+    {
+      "cluster_id": 2,
+      "cluster_size": 477,
+      "avg_fare": 22.2,
+      "avg_miles": 5.76,
+      "airport_pct": 8.5,
+      "downtown_pct": 49.8,
+      "night_pct": 3.2
+    },
+    {
+      "cluster_id": 3,
+      "cluster_size": 768,
+      "avg_fare": 20.59,
+      "avg_miles": 4.88,
+      "airport_pct": 7.5,
+      "downtown_pct": 55.6,
+      "night_pct": 3.5
+    },
+    {
+      "cluster_id": 4,
+      "cluster_size": 1041,
+      "avg_fare": 31.03,
+      "avg_miles": 7.91,
+      "airport_pct": 15.9,
+      "downtown_pct": 39.0,
+      "night_pct": 4.3
+    },
+    {
+      "cluster_id": 5,
+      "cluster_size": 670,
+      "avg_fare": 43.91,
+      "avg_miles": 11.68,
+      "airport_pct": 30.8,
+      "downtown_pct": 30.5,
+      "night_pct": 6.0
+    }
+  ],
+  "alerts": [
+    {
+      "alert_date": "2023-09-30",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.52"
+    },
+    {
+      "alert_date": "2023-09-29",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.68"
+    },
+    {
+      "alert_date": "2023-09-28",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.75"
+    },
+    {
+      "alert_date": "2023-09-27",
+      "alert_type": "PERFORMANCE",
+      "severity": "OK",
+      "message": "Daily MAE: 3.37"
+    },
+    {
+      "alert_date": "2023-09-26",
+      "alert_type": "PERFORMANCE",
+      "severity": "OK",
+      "message": "Daily MAE: 3.37"
+    },
+    {
+      "alert_date": "2023-09-25",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.71"
+    },
+    {
+      "alert_date": "2023-09-24",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 4.2"
+    },
+    {
+      "alert_date": "2023-09-23",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.68"
+    },
+    {
+      "alert_date": "2023-09-22",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.65"
+    },
+    {
+      "alert_date": "2023-09-21",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.82"
+    },
+    {
+      "alert_date": "2023-09-20",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.57"
+    },
+    {
+      "alert_date": "2023-09-19",
+      "alert_type": "PERFORMANCE",
+      "severity": "OK",
+      "message": "Daily MAE: 3.5"
+    },
+    {
+      "alert_date": "2023-09-18",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.75"
+    },
+    {
+      "alert_date": "2023-09-17",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 4.39"
+    },
+    {
+      "alert_date": "2023-09-16",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 4.26"
+    },
+    {
+      "alert_date": "2023-09-15",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 4.04"
+    },
+    {
+      "alert_date": "2023-09-14",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.74"
+    },
+    {
+      "alert_date": "2023-09-13",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.6"
+    },
+    {
+      "alert_date": "2023-09-12",
+      "alert_type": "PERFORMANCE",
+      "severity": "OK",
+      "message": "Daily MAE: 3.45"
+    },
+    {
+      "alert_date": "2023-09-11",
+      "alert_type": "PERFORMANCE",
+      "severity": "WARNING",
+      "message": "Daily MAE: 3.73"
+    }
+  ],
+  "total_predictions": 1425047
+}

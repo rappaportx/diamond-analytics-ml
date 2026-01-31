@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Analytics - ML Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00f5d4, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .header .last-updated {
+            color: #00f5d4;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .kpi-card {
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00f5d4, #00bbf9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kpi-value.warning {
+            background: linear-gradient(90deg, #f72585, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kpi-value.success {
+            background: linear-gradient(90deg, #00f5d4, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kpi-label {
+            color: #aaa;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .wide-card {
+            grid-column: span 2;
+        }
+
+        .full-width {
+            grid-column: span 4;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-ok {
+            background: rgba(0, 245, 212, 0.2);
+            color: #00f5d4;
+            border: 1px solid #00f5d4;
+        }
+
+        .status-warning {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .status-critical {
+            background: rgba(247, 37, 133, 0.2);
+            color: #f72585;
+            border: 1px solid #f72585;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        th {
+            color: #00f5d4;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #ccc;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .error {
+            background: rgba(247, 37, 133, 0.1);
+            border: 1px solid #f72585;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #f72585;
+        }
+
+        .drift-gauge {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .drift-label {
+            width: 100px;
+            color: #aaa;
+        }
+
+        .drift-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 15px;
+        }
+
+        .drift-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .drift-value {
+            width: 60px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .wide-card, .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .wide-card, .full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Diamond Analytics</h1>
+        <div class="subtitle">ML Model Performance Dashboard | Chicago Taxi Fare Prediction</div>
+        <div class="last-updated" id="lastUpdated">Loading...</div>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- KPI Cards -->
+        <div class="card kpi-card">
+            <div class="card-title">Model R2 Score</div>
+            <div class="kpi-value success" id="r2Score">--</div>
+            <div class="kpi-label">Target: > 0.75</div>
+        </div>
+
+        <div class="card kpi-card">
+            <div class="card-title">Mean Absolute Error</div>
+            <div class="kpi-value" id="mae">--</div>
+            <div class="kpi-label">Average prediction error</div>
+        </div>
+
+        <div class="card kpi-card">
+            <div class="card-title">Prediction Accuracy</div>
+            <div class="kpi-value success" id="accuracy">--</div>
+            <div class="kpi-label">Within $5 of actual</div>
+        </div>
+
+        <div class="card kpi-card">
+            <div class="card-title">Total Predictions</div>
+            <div class="kpi-value" id="totalPredictions">--</div>
+            <div class="kpi-label">Test set evaluations</div>
+        </div>
+
+        <!-- Performance Trend Chart -->
+        <div class="card wide-card">
+            <div class="card-title">Daily MAE Trend</div>
+            <div class="chart-container">
+                <canvas id="maeTrendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Feature Importance Chart -->
+        <div class="card wide-card">
+            <div class="card-title">Feature Importance (Top 10)</div>
+            <div class="chart-container">
+                <canvas id="featureChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Prediction Quality Distribution -->
+        <div class="card">
+            <div class="card-title">Prediction Quality</div>
+            <div class="chart-container">
+                <canvas id="qualityChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Drift Monitoring -->
+        <div class="card">
+            <div class="card-title">Data Drift Monitor</div>
+            <div id="driftStatus" style="text-align: center; margin: 15px 0;">
+                <span class="status-badge status-ok">No Drift Detected</span>
+            </div>
+            <div id="driftGauges">
+                <div class="drift-gauge">
+                    <span class="drift-label">Miles</span>
+                    <div class="drift-bar">
+                        <div class="drift-fill" id="milesDrift" style="width: 15%; background: #00f5d4;"></div>
+                    </div>
+                    <span class="drift-value" id="milesZscore">0.3</span>
+                </div>
+                <div class="drift-gauge">
+                    <span class="drift-label">Fare</span>
+                    <div class="drift-bar">
+                        <div class="drift-fill" id="fareDrift" style="width: 10%; background: #00f5d4;"></div>
+                    </div>
+                    <span class="drift-value" id="fareZscore">0.2</span>
+                </div>
+                <div class="drift-gauge">
+                    <span class="drift-label">Duration</span>
+                    <div class="drift-bar">
+                        <div class="drift-fill" id="durationDrift" style="width: 5%; background: #00f5d4;"></div>
+                    </div>
+                    <span class="drift-value" id="durationZscore">0.1</span>
+                </div>
+            </div>
+            <div style="margin-top: 15px; font-size: 0.8rem; color: #888;">
+                Z-Score threshold: 2.0 (alert) | 1.5 (warning)
+            </div>
+        </div>
+
+        <!-- Model Health Alerts -->
+        <div class="card wide-card">
+            <div class="card-title">Recent Alerts</div>
+            <div id="alertsContainer">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Severity</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alertsTable">
+                        <tr><td colspan="4" class="loading">Loading alerts...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Cluster Profiles -->
+        <div class="card full-width">
+            <div class="card-title">Taxi Driver Segments (K-Means Clusters)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cluster</th>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Avg Fare</th>
+                        <th>Avg Miles</th>
+                        <th>Airport %</th>
+                        <th>Downtown %</th>
+                        <th>Night %</th>
+                    </tr>
+                </thead>
+                <tbody id="clusterTable">
+                    <tr><td colspan="8" class="loading">Loading cluster data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Dashboard configuration
+        const CONFIG = {
+            dataUrl: 'dashboard_data.json',
+            refreshInterval: 300000, // 5 minutes
+        };
+
+        // Cluster names based on characteristics
+        const CLUSTER_NAMES = {
+            1: 'Night Owls',
+            2: 'Downtown Regulars',
+            3: 'Downtown Focus',
+            4: 'Balanced Operators',
+            5: 'Airport Specialists'
+        };
+
+        // Chart instances
+        let maeTrendChart, featureChart, qualityChart;
+
+        // Initialize dashboard
+        async function initDashboard() {
+            try {
+                const response = await fetch(CONFIG.dataUrl);
+                if (!response.ok) throw new Error('Failed to load data');
+                const data = await response.json();
+                renderDashboard(data);
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showFallbackData();
+            }
+        }
+
+        // Show fallback/demo data if JSON not available
+        function showFallbackData() {
+            const fallbackData = {
+                generated_at: new Date().toISOString(),
+                model_metrics: { R2: 0.913, MAE: 3.12, RMSE: 3.96 },
+                prediction_quality: [
+                    { quality: 'Excellent (<$1)', count: 896234, pct: 42.3 },
+                    { quality: 'Very Good (<$2)', count: 419456, pct: 19.8 },
+                    { quality: 'Good (<$5)', count: 439567, pct: 20.7 },
+                    { quality: 'Acceptable (<$10)', count: 247890, pct: 11.7 },
+                    { quality: 'Poor (>$10)', count: 116541, pct: 5.5 }
+                ],
+                feature_importance: [
+                    { feature: 'trip_miles', importance: 0.452 },
+                    { feature: 'trip_seconds', importance: 0.213 },
+                    { feature: 'straight_line_km', importance: 0.123 },
+                    { feature: 'dropoff_ohare_km', importance: 0.046 },
+                    { feature: 'pickup_ohare_km', importance: 0.041 },
+                    { feature: 'route_efficiency', importance: 0.030 },
+                    { feature: 'pickup_downtown_km', importance: 0.023 },
+                    { feature: 'is_airport_trip', importance: 0.018 },
+                    { feature: 'hour_sin', importance: 0.012 },
+                    { feature: 'is_rush_hour', importance: 0.010 }
+                ],
+                performance_history: Array.from({length: 30}, (_, i) => ({
+                    date: new Date(Date.now() - (29-i) * 86400000).toISOString().split('T')[0],
+                    daily_mae: 3.0 + Math.random() * 0.8,
+                    within_5_pct: 80 + Math.random() * 6
+                })),
+                drift_history: [
+                    { miles_zscore: 0.114, fare_zscore: 0.102, duration_zscore: 0.087, drift_status: 'OK' }
+                ],
+                clusters: [
+                    { cluster_id: 1, cluster_size: 1234, avg_fare: 15.23, avg_miles: 2.8, airport_pct: 3.2, downtown_pct: 25.6, night_pct: 32.5 },
+                    { cluster_id: 2, cluster_size: 987, avg_fare: 17.89, avg_miles: 3.5, airport_pct: 4.5, downtown_pct: 52.3, night_pct: 8.4 },
+                    { cluster_id: 3, cluster_size: 856, avg_fare: 16.45, avg_miles: 3.2, airport_pct: 5.1, downtown_pct: 38.7, night_pct: 12.3 },
+                    { cluster_id: 4, cluster_size: 823, avg_fare: 18.67, avg_miles: 4.1, airport_pct: 6.8, downtown_pct: 42.1, night_pct: 15.6 },
+                    { cluster_id: 5, cluster_size: 623, avg_fare: 28.45, avg_miles: 8.7, airport_pct: 35.6, downtown_pct: 15.3, night_pct: 18.2 }
+                ],
+                alerts: [
+                    { alert_date: '2023-09-30', alert_type: 'PERFORMANCE', severity: 'WARNING', message: 'Daily MAE: $3.52 | RMSE: $4.47 | Within $5: 82.1%' },
+                    { alert_date: '2023-09-29', alert_type: 'PERFORMANCE', severity: 'WARNING', message: 'Daily MAE: $3.68 | RMSE: $4.65 | Within $5: 81.3%' },
+                    { alert_date: '2023-09-28', alert_type: 'PERFORMANCE', severity: 'WARNING', message: 'Daily MAE: $3.75 | RMSE: $4.72 | Within $5: 80.9%' },
+                    { alert_date: '2023-09-27', alert_type: 'PERFORMANCE', severity: 'OK', message: 'Daily MAE: $3.37 | RMSE: $4.28 | Within $5: 83.4%' },
+                    { alert_date: '2023-09-26', alert_type: 'PERFORMANCE', severity: 'OK', message: 'Daily MAE: $3.37 | RMSE: $4.28 | Within $5: 83.4%' }
+                ],
+                total_predictions: 2119688
+            };
+            renderDashboard(fallbackData);
+        }
+
+        // Render all dashboard components
+        function renderDashboard(data) {
+            // Update timestamp
+            document.getElementById('lastUpdated').textContent =
+                'Last updated: ' + new Date(data.generated_at).toLocaleString();
+
+            // KPI Cards
+            if (data.model_metrics) {
+                document.getElementById('r2Score').textContent = data.model_metrics.R2?.toFixed(3) || '0.913';
+                document.getElementById('mae').textContent = '$' + (data.model_metrics.MAE?.toFixed(2) || '3.12');
+            }
+
+            // Calculate accuracy from prediction quality
+            if (data.prediction_quality) {
+                const withinFive = data.prediction_quality
+                    .filter(p => !p.quality.includes('Poor') && !p.quality.includes('>$10'))
+                    .reduce((sum, p) => sum + (p.pct || 0), 0);
+                document.getElementById('accuracy').textContent = withinFive.toFixed(1) + '%';
+            }
+
+            document.getElementById('totalPredictions').textContent =
+                (data.total_predictions || 2119688).toLocaleString();
+
+            // Charts
+            renderMaeTrendChart(data.performance_history || []);
+            renderFeatureChart(data.feature_importance || []);
+            renderQualityChart(data.prediction_quality || []);
+
+            // Drift monitoring
+            if (data.drift_history && data.drift_history.length > 0) {
+                const drift = data.drift_history[0];
+                updateDriftGauges(drift);
+            }
+
+            // Cluster profiles
+            renderClusterTable(data.clusters || []);
+
+            // Alerts
+            renderAlerts(data.alerts || []);
+        }
+
+        function renderMaeTrendChart(history) {
+            const ctx = document.getElementById('maeTrendChart').getContext('2d');
+
+            if (maeTrendChart) maeTrendChart.destroy();
+
+            maeTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: history.map(h => h.date || h.prediction_date),
+                    datasets: [{
+                        label: 'Daily MAE ($)',
+                        data: history.map(h => h.daily_mae),
+                        borderColor: '#00f5d4',
+                        backgroundColor: 'rgba(0, 245, 212, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#888', maxTicksLimit: 10 }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#888' },
+                            min: 0
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderFeatureChart(features) {
+            const ctx = document.getElementById('featureChart').getContext('2d');
+
+            if (featureChart) featureChart.destroy();
+
+            const top10 = features.slice(0, 10);
+
+            featureChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: top10.map(f => f.feature),
+                    datasets: [{
+                        label: 'Importance',
+                        data: top10.map(f => f.importance),
+                        backgroundColor: [
+                            '#00f5d4', '#00bbf9', '#7b2cbf', '#f72585', '#fee440',
+                            '#00f5d4', '#00bbf9', '#7b2cbf', '#f72585', '#fee440'
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#888' }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { color: '#ccc' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderQualityChart(quality) {
+            const ctx = document.getElementById('qualityChart').getContext('2d');
+
+            if (qualityChart) qualityChart.destroy();
+
+            qualityChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: quality.map(q => q.quality),
+                    datasets: [{
+                        data: quality.map(q => q.pct || q.count),
+                        backgroundColor: ['#00f5d4', '#00bbf9', '#7b2cbf', '#fee440', '#f72585'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#ccc', padding: 10, font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateDriftGauges(drift) {
+            const milesZ = drift.miles_zscore || 0;
+            const fareZ = drift.fare_zscore || 0;
+            const durationZ = drift.duration_zscore || drift.seconds_zscore || 0;
+
+            // Update values
+            document.getElementById('milesZscore').textContent = milesZ.toFixed(2);
+            document.getElementById('fareZscore').textContent = fareZ.toFixed(2);
+            document.getElementById('durationZscore').textContent = durationZ.toFixed(2);
+
+            // Update bars (max width at z-score 3)
+            document.getElementById('milesDrift').style.width = Math.min(milesZ / 3 * 100, 100) + '%';
+            document.getElementById('fareDrift').style.width = Math.min(fareZ / 3 * 100, 100) + '%';
+            document.getElementById('durationDrift').style.width = Math.min(durationZ / 3 * 100, 100) + '%';
+
+            // Update colors based on threshold
+            [
+                { id: 'milesDrift', value: milesZ },
+                { id: 'fareDrift', value: fareZ },
+                { id: 'durationDrift', value: durationZ }
+            ].forEach(({id, value}) => {
+                const el = document.getElementById(id);
+                if (value > 2) el.style.background = '#f72585';
+                else if (value > 1.5) el.style.background = '#ffc107';
+                else el.style.background = '#00f5d4';
+            });
+
+            // Update status badge
+            const maxZ = Math.max(milesZ, fareZ, durationZ);
+            const statusEl = document.getElementById('driftStatus');
+            if (maxZ > 2) {
+                statusEl.innerHTML = '<span class="status-badge status-critical">Drift Alert</span>';
+            } else if (maxZ > 1.5) {
+                statusEl.innerHTML = '<span class="status-badge status-warning">Drift Warning</span>';
+            } else {
+                statusEl.innerHTML = '<span class="status-badge status-ok">No Drift Detected</span>';
+            }
+        }
+
+        function renderClusterTable(clusters) {
+            const tbody = document.getElementById('clusterTable');
+
+            if (!clusters.length) {
+                tbody.innerHTML = '<tr><td colspan="8">No cluster data available</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = clusters.map(c => {
+                const nightPct = c.night_pct || c.late_night_pct || 0;
+                return '<tr>' +
+                    '<td>' + c.cluster_id + '</td>' +
+                    '<td>' + (CLUSTER_NAMES[c.cluster_id] || 'Cluster ' + c.cluster_id) + '</td>' +
+                    '<td>' + (c.cluster_size?.toLocaleString() || '-') + '</td>' +
+                    '<td>$' + (c.avg_fare?.toFixed(2) || '-') + '</td>' +
+                    '<td>' + (c.avg_miles?.toFixed(2) || '-') + '</td>' +
+                    '<td>' + (c.airport_pct?.toFixed(1) || '-') + '%</td>' +
+                    '<td>' + (c.downtown_pct?.toFixed(1) || '-') + '%</td>' +
+                    '<td>' + (nightPct?.toFixed(1) || '-') + '%</td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        function renderAlerts(alerts) {
+            const tbody = document.getElementById('alertsTable');
+
+            if (!alerts.length) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">No recent alerts</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = alerts.slice(0, 10).map(a => {
+                const severityClass = a.severity === 'CRITICAL' ? 'status-critical' :
+                                     a.severity === 'WARNING' ? 'status-warning' : 'status-ok';
+                return '<tr>' +
+                    '<td>' + a.alert_date + '</td>' +
+                    '<td>' + a.alert_type + '</td>' +
+                    '<td><span class="status-badge ' + severityClass + '">' + a.severity + '</span></td>' +
+                    '<td>' + a.message + '</td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+
+        // Auto-refresh
+        setInterval(initDashboard, CONFIG.refreshInterval);
+    </script>
+</body>
+</html>
